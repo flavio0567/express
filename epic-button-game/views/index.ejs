@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EpicButtonGame</title>
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./static/style.css/">
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+      $(document).ready(function () {
+        // this triggers the connection event in our server  
+        var socket = io.connect();
+        // we'll write all the socket stuff after the above line
+        $('#btn1').click(function(){
+            var num = $( "#btn1" ).data( "count" );
+            if (!num) {
+                var num = 1;
+            } else {
+                num = num + 1;
+            }
+            $('#btn1').data( "count", num );
+            console.log('num', num);
+            socket.emit('push_button', {counter: num });
+            socket.on('update_counter', function() {
+                $('h3').html('The button has been pushed <br>' +
+                 num + '</br> time(s)');
+            });
+        })
+        $('#btn2').click(function(){
+            var num = 0;
+            $('#btn1').data( "count", 0 );
+            console.log('num', num);
+            $('h3').html('The button has been pushed <br>' +
+                 num + '</br> time(s)');
+        });     
+      });
+    </script>
+</head>
+<body>
+    <h3></h3>
+    <br>
+    <hr>
+    <div id="btn1" value='count'>Push the button to update the count!
+    <button>Push the Epic Button</button></div>
+    <br>
+    <br>
+    <div id="btn2">
+    <button>Reset count</button></div>
+</body>
+</html>
